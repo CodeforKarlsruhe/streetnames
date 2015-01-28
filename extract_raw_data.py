@@ -26,6 +26,10 @@ if __name__ == '__main__':
     lines = text.split('\n')
     text = '\n'.join(line.strip() for line in lines)
 
+    # There's a single entry which contains a page break. We fix it
+    # manually.
+    text = text.replace('\nund Meisterschüler', 'und Meisterschüler')
+
     # Extract data
     streets = {}
     paragraphs = re.split(r'\n\n+', text)
@@ -43,11 +47,7 @@ if __name__ == '__main__':
             continue
         g = m.groups()
         street = g[0].strip()
-        if g[1]:
-            year = int(g[1])
-        else:
-            print 'WARNING: No year for "%s".' % street
-            year = None
+        year = int(g[1]) if g[1] else None
 
         d = {
             'info': '\n'.join(lines[1:]),
