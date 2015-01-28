@@ -1,7 +1,6 @@
 /venv/
-
 /strassennamen.html
-/raw_data.json
+/strassennamen.json
 
 *.swp
 *.pyc

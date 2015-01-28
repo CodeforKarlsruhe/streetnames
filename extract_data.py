@@ -5,7 +5,7 @@
 Parse HTML export of ``strassennamen.pdf``.
 
 Requires ``strassennamen.html``, generated using pdf2htmlEX_ via
-``pdf2htmlEX strassennamen.pdf``. Produces ``raw_data.json``.
+``pdf2htmlEX strassennamen.pdf``. Produces ``strassennamen.json``.
 
 .. _pdf2htmlEX: https://github.com/coolwanglu/pdf2htmlEX
 """
@@ -73,7 +73,7 @@ def tag_text(t):
 if __name__ == '__main__':
     HERE = os.path.dirname(os.path.abspath(__file__))
     HTML = os.path.join(HERE, 'strassennamen.html')
-    JSON = os.path.join(HERE, 'raw_data.json')
+    JSON = os.path.join(HERE, 'strassennamen.json')
 
     with codecs.open(HTML, 'r', encoding='utf8') as f:
         soup = bs4.BeautifulSoup(f.read())
