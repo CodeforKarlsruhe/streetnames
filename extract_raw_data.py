@@ -49,6 +49,16 @@ if __name__ == '__main__':
         street = g[0].strip()
         year = int(g[1]) if g[1] else None
 
+        # Sometimes there is additional stuff behind the street name,
+        # e.g. "Unterer Lichtenbergweg in den 1970". That stuff always
+        # is all lowercase.
+        parts = list(reversed(street.split()))
+        if len(parts) > 1:
+            for i in range(len(parts) - 1):
+                if not parts[i].islower():
+                    break
+            street = ' '.join(reversed(parts[i:]))
+
         d = {
             'info': '\n'.join(lines[1:]),
         }
