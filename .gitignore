@@ -1,5 +1,8 @@
 /venv/
 /streetnames.json
+/highways.osm
+/streets.geojson
+/karlsruhe-regbez-latest.osm.pbf*
 
 *.swp
 *.pyc
