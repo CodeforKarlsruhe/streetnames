@@ -49,8 +49,8 @@ def parse_osm(f):
     tags = {}
     for event, element in etree.iterparse(f):
         if element.tag == 'node':
-            nodes[element.get('id')] = (float(element.get('lat')),
-                                        float(element.get('lon')))
+            nodes[element.get('id')] = (float(element.get('lon')),
+                                        float(element.get('lat')))
             tags = {}
         elif element.tag == 'tag':
             tags[element.get('k')] = element.get('v')
