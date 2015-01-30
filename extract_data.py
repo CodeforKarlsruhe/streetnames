@@ -2,22 +2,97 @@
 # vim: set fileencoding=utf-8 :
 
 """
-Parse HTML export of ``strassennamen.pdf``.
+Script to extract data from Karlsruhe street names PDF.
 
-Requires ``strassennamen.html``, generated using pdf2htmlEX_ via
-``pdf2htmlEX strassennamen.pdf``. Produces ``strassennamen.json``.
-
-.. _pdf2htmlEX: https://github.com/coolwanglu/pdf2htmlEX
+Takes ``strassennamen.pdf`` and outputs data into ``streetnames.json``.
 """
 
 from __future__ import unicode_literals
 
 import codecs
+import cStringIO
 import json
 import os.path
 import re
 
-import bs4
+from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
+from pdfminer.pdfpage import PDFPage
+from pdfminer.converter import TextConverter
+from pdfminer.layout import LAParams
+
+
+def collapse_ws(s):
+    """
+    Collapse whitespace in a string.
+    """
+    return re.sub(r'\s+', ' ', s.strip())
+
+
+# Strings that are part of the general header
+HEADER_STRINGS = ['Liegenschaftsamt', 'Straßennamen in Karlsruhe']
+
+class Converter(TextConverter):
+
+    def __init__(self, *args, **kwargs):
+        super(Converter, self).__init__(*args, **kwargs)
+        self.entries = []
+        self._entry = None
+
+    def _store_entry(self):
+        if self._entry:
+            self._entry = {k: collapse_ws(v) for k, v in self._entry.items()}
+            h = self._entry['header']
+            if len(h) > 1 and h not in HEADER_STRINGS:
+                self.entries.append(self._entry)
+        self._entry = {'header': '', 'previous': '', 'info': ''}
+
+    def render_string(self, textstate, seq):
+        # We use the font style to distinguish entry headers, previous
+        # street names and general information. Note that the italic
+        # text in this PDF is not due to an italic font but is achieved
+        # using a matrix transform.
+        font = textstate.font
+        chars = []
+        for s in seq:
+            if isinstance(s, str):
+                chars.extend(font.to_unichr(char) for char in font.decode(s))
+        text = ''.join(chars)
+        if textstate.matrix[2] == 0:
+            if textstate.font.basefont.endswith('Bd'):
+                # Bold font
+                self._store_entry()
+                self._entry['header'] += text
+            else:
+                # Light font
+                self._entry['info'] += text
+        else:
+            # Italic font
+            self._entry['previous'] += text
+        return super(Converter, self).render_string(textstate, seq)
+
+    def close(self):
+        self._store_entry()
+        return super(Converter, self).close()
+
+
+def extract_entries(pdf_filename):
+    """
+    Extract entries from PDF file.
+    """
+    output = cStringIO.StringIO()
+    rsrcmgr = PDFResourceManager(caching=True)
+    device = Converter(rsrcmgr, output, codec='utf8', laparams=LAParams())
+    page_numbers = set()
+    try:
+        with open(pdf_filename, 'rb') as f:
+            interpreter = PDFPageInterpreter(rsrcmgr, device)
+            for page in PDFPage.get_pages(f, page_numbers, maxpages=0,
+                                          password='', caching=True,
+                                          check_extractable=True):
+                interpreter.process_page(page)
+    finally:
+        device.close()
+    return device.entries
 
 
 def parse_header(s):
@@ -63,58 +138,26 @@ def parse_previous(s):
     return entries
 
 
-def tag_text(t):
+def parse_entries(entries):
     """
-    Get a tag's text, including that of nested tags.
+    Parse entries into street data.
     """
-    return ''.join(t.strings).strip()
+    streets = {}
+    for entry in entries:
+        name, year = parse_header(entry['header'])
+        streets[name] = {
+            'previous': parse_previous(entry['previous']),
+            'info': entry['info'],
+        }
+    return streets
 
 
 if __name__ == '__main__':
     HERE = os.path.dirname(os.path.abspath(__file__))
-    HTML = os.path.join(HERE, 'strassennamen.html')
-    JSON = os.path.join(HERE, 'strassennamen.json')
-
-    with codecs.open(HTML, 'r', encoding='utf8') as f:
-        soup = bs4.BeautifulSoup(f.read())
-
-    streets = {}
-    current = None
-
-    def store():
-        if current:
-            current['previous'] = parse_previous(current['previous'])
-            streets[current['name']] = current
-
-    for div in soup.find_all(id='page-container')[0].find_all('div'):
-        classes = div.attrs.get('class', [])
-        if not 't' in classes:
-            # Structuring div
-            continue
-        text = tag_text(div)
-        if not text:
-            continue
-        if 'ff1' in classes:
-            # Bold text, entry header
-            if text in ['Liegenschaftsamt', 'Straßennamen in Karlsruhe']:
-                continue
-            if len(text) == 1:
-                # Letter header
-                continue
-            store()
-            current = {'name': '', 'year': None, 'previous': '', 'info': ''}
-            current['name'], current['year'] = parse_header(text)
-        elif 'm1' in classes:
-            # Italic text, contains previous street names
-            if current['previous']:
-                current['previous'] += ' '
-            current['previous'] += text
-        else:
-            # Normal text
-            if current['info']:
-                current['info'] += ' '
-            current['info'] += text
-    store()
+    PDF = os.path.join(HERE, 'strassennamen.pdf')
+    JSON = os.path.join(HERE, 'streetnames.json')
+    entries = extract_entries(PDF)
+    streets = parse_entries(entries)
 
     # Manual fixes
     #
@@ -147,4 +190,3 @@ if __name__ == '__main__':
 
     with codecs.open(JSON, 'w', encoding='utf8') as f:
         json.dump(streets, f, sort_keys=True, indent=4, separators=(',', ': '))
-
