@@ -104,6 +104,7 @@ def parse_header(s):
         return (None, None)
     g = m.groups()
     street = g[0].strip()
+    street = re.sub(r'\s*-\s*', '-', street)
     year = int(g[1]) if g[1] else None
 
     # Sometimes there is additional stuff behind the street name,
@@ -187,6 +188,7 @@ if __name__ == '__main__':
     streets['Schlossplatz']['previous'] = [(None, 'Großer/Äußerer Zirkel')]
     streets['Zirkel']['previous'] = [(None, 'Kleiner/Innerer Zirkel')]
     streets['Zunftstraße']['previous'] = [(None, 'Kronengaß'), (None, 'Kronenstraße')]
+    streets['Am Schloss Gottesaue'] = streets.pop('Am Schloß Gottesau')
 
     with codecs.open(JSON, 'w', encoding='utf8') as f:
         json.dump(streets, f, sort_keys=True, indent=4, separators=(',', ': '))
