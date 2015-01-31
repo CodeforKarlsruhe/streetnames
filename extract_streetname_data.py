@@ -167,6 +167,7 @@ def parse_entries(entries):
     for entry in entries:
         name, year = parse_header(entry['header'])
         streets[name] = {
+            'year': year,
             'previous': parse_previous(entry['previous']),
             'info': entry['info'],
         }
