@@ -25,6 +25,8 @@ names comes from
 [a PDF provided by the City of Karlsruhe](http://www.karlsruhe.de/b3/bauen/tiefbau/strassenverkehr/strassennamenbuch.de).
 The geographic data comes from [OpenStreetMap](http://www.openstreetmap.org).
 
+For the OSM data conversion you need to have [Osmosis](http://wiki.openstreetmap.org/wiki/Osmosis) installed.
+
 `extract_streetname_data.py` extracts the street name information from the PDF:
 
     $ ./extract_streetname_data.py
