@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="leaflet.label/leaflet.label.css" />
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
+        <style>
+            html, body, #map {
+                height: 100%;
+                width: 100%;
+                padding: 0;
+                margin: 0;
+            }
+
+            .leaflet-label {
+                font-weight: normal;
+            }
+
+            div.info {
+                width: 40em;
+                white-space: normal;
+            }
+        </style>
+
+        <script src="jquery-1.11.2.min.js"></script>
+        <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+        <script src="leaflet.label/leaflet.label.js"></script>
+        <script>
+            var TILES_URL = 'http://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
+            var INITIAL_LOCATION = [49.0140679, 8.4044366];
+            var INITIAL_ZOOM = 14;
+            var ATTRIBUTION = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> ' +
+                              'contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">' +
+                              'CC-BY-SA</a>. Tiles &copy; <a href="http://cartodb.com/attributions">' +
+                              'CartoDB</a>';
+            var MAX_ZOOM = 18;
+
+            var STYLE = {
+                "color": '#2b8cbe',
+                "weight": 5,
+                "opacity": 0.75
+            };
+
+            function onEachFeature(feature, layer) {
+                var label = '<div><strong>' + feature.id + '</strong>';
+                if (feature.properties.year) {
+                    label += ' <em>(' + feature.properties.year + ')</em>';
+                }
+                label += '</div>';
+                if (feature.properties.info) {
+                    label += '<div class="info">' + feature.properties.info + '</div>';
+                }
+                layer.bindLabel(label);
+            }
+
+            $(document).ready(function() {
+                var tiles = new L.TileLayer(TILES_URL, {attribution: ATTRIBUTION});
+                var map = new L.Map('map').addLayer(tiles).setView(INITIAL_LOCATION, 14);
+                $.getJSON("streetnames.geojson", function(json) {
+                    L.geoJson(json, {style: STYLE, onEachFeature: onEachFeature}).addTo(map);
+                    console.log(json);
+                })
+            });
+        </script>
+    </head>
+    <body>
+        <div id="map"></div>
+    </body>
+</html>
