@@ -36,7 +36,7 @@ For the OSM data conversion you need to have [Osmosis](http://wiki.openstreetmap
 coordinates to GeoJSON:
 
     $ ./get_highways.sh
-    $ ./extract_streetname_data.py
+    $ ./extract_street_coordinates.py
 
 Finally, `merge.py` will merge the information from both sources into the file `streetnames.geojson`:
 
