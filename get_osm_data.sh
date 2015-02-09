@@ -23,11 +23,11 @@ if [ -f "${BASE}" ]; then
         echo "File is up to date."
     else
         echo "File is outdated, downloading latest version."
-        wget ${DIR}/${BASE}
+        wget ${DIR}/${BASE} -O ${BASE}
     fi
 else
     echo "${BASE} doesn't exist, downloading it."
-    wget ${DIR}/${BASE}
+    wget ${DIR}/${BASE} -O ${BASE}
 fi
 
 
