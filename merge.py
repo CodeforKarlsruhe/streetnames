@@ -64,6 +64,7 @@ if __name__ == '__main__':
 
     with codecs.open(NAMES, 'r', encoding='utf8') as f:
         names = json.load(f)
+    complete_features = []
     for name, props in names.iteritems():
         if not (props['year'] or props['previous'] or props['info']):
             print 'No information about "%s"' % name
@@ -73,7 +74,9 @@ if __name__ == '__main__':
             feature.properties = props
         except KeyError:
             print 'Could not find coordinates for "%s"' % name
+            continue
+        complete_features.append(feature)
 
-    collection = geojson.FeatureCollection(features.values())
+    collection = geojson.FeatureCollection(complete_features)
     with codecs.open(MERGED, 'w', encoding='utf8') as f:
         geojson.dump(collection, f)
