@@ -46,7 +46,11 @@ def normalize_name(n):
     different data sources. This function tries to reduce these
     differences.
     """
-    n = n.lower().replace('-', ' ').replace('ß', 'ss').strip()
+    n = (n.replace('St.', 'sankt')
+          .lower()
+          .replace('-', '')
+          .replace('ß', 'ss')
+          .strip())
     return re.sub(r'\s+', ' ', n)
 
 
