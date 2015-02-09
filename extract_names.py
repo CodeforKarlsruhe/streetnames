@@ -462,6 +462,23 @@ if __name__ == '__main__':
         'previous': [],
     }
     streets['Ernststraße']['person'] = 'Ernst I. von Baden-Durlach'
+    streets['Moningerstraße']['previous'] = [(1883, 'Grenzestraße')]
+    streets['Froschhöhle'] = streets.pop('Froschhöhl')
+    streets['Gewann Oberroßweide'] = streets.pop('Oberrossweide')
+    streets['ESSO-Straße'] = streets.pop('Essostraße')
+    streets['Stieglitzweg'] = streets.pop('Stieglitzstraße')
+    streets['Ohiostraße'] = streets.pop('Ohio Straße')
+    streets['Gotthard-Franz-Straße'] = streets.pop('Gotthart-Franz-Straße')
+    streets['Wachhausstraße'] = streets.pop('Wachhaustraße')
+    streets['Ohiostraße'] = streets.pop('Ohio Street')
+    streets['Ringelberghohl'] = streets.pop('Ringelberghoh')
+    streets['Däumlingweg'] = streets.pop('Däumlingsweg')
+    streets['Bruchwaldstraße'] = streets.pop('Bruchwaldstaße')
+    streets['Platz der Grundrechte'] = streets.pop('Platz der Gerechtigkeit')
+    streets['Gerhard-Leibholz-Straße'] = streets.pop('Gebhard-Leibholz-Straße')
+    streets['Gebhard-Müller-Straße'] = streets.pop('Gehard-Müller-Straße')
+    streets['Schmetterlingweg'] = streets.pop('Schmetterlingsweg')
+    streets['Otto-Ammann-Platz'] = streets.pop('Otto-Amman-Platz')
 
     # TODO: Information that's currently missing (does not include
     # most stuff that's already set to ``None``):
@@ -483,6 +500,8 @@ if __name__ == '__main__':
     # - Who is Gotthold-Mayer-Platz named for?
     # - Is Charlottenplatz named for Anna Charlotte Amalie (like Charlottenstraße)?
     # - Who is Otto-Dullenkopf-Park named for?
+    # - "Platz am Wasserturm" is called Hanne-Landgraf-Platz since 2014 (named
+    #   after Hanne Landgraf, https://de.wikipedia.org/wiki/Hanne_Landgraf)
 
     # TODO: The following streets are named after several people. The current
     # data format cannot describe that properly:
