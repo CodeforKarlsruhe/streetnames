@@ -27,16 +27,14 @@ The geographic data comes from [OpenStreetMap](http://www.openstreetmap.org).
 
 For the OSM data conversion you need to have [Osmosis](http://wiki.openstreetmap.org/wiki/Osmosis) installed.
 
-`extract_streetname_data.py` extracts the street name information from the PDF:
+First extract the street name information from the PDF:
 
-    $ ./extract_streetname_data.py
+    $ ./extract_names.py
 
-`get_highways.sh` will download the necessary OSM data (about 80M) and extract the streets
-(called "highways" in OSM). Afterwards, `extract_street_coordinates.py` exports the streets'
-coordinates to GeoJSON:
+Then download the necessary OSM data (about 80M) and extract the coordinates:
 
-    $ ./get_highways.sh
-    $ ./extract_street_coordinates.py
+    $ ./get_osm_data.sh
+    $ ./extract_coordinates.py
 
 Finally, `merge.py` will merge the information from both sources into the file `streetnames.geojson`:
 

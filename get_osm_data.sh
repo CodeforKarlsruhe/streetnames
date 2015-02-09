@@ -32,13 +32,10 @@ fi
 
 
 #
-# Extract highway information
+# Extract coordinates for things in Karlsruhe
 #
 
 osmosis --read-pbf file=${BASE} \
         --bounding-polygon file=karlsruhe.poly \
-        --way-key keyList=highway \
-        --way-key keyList=name \
-        --tag-filter reject-relations \
-        --used-node idTrackerType=Dynamic \
-        --write-xml highways.osm
+        --write-xml karlsruhe.osm
+

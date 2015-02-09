@@ -89,8 +89,8 @@ def ways2geometry(ways):
 
 if __name__ == '__main__':
     HERE = os.path.dirname(os.path.abspath(__file__))
-    OSM = os.path.join(HERE, 'highways.osm')
-    GEOJSON = os.path.join(HERE, 'streets.geojson')
+    OSM = os.path.join(HERE, 'karlsruhe.osm')
+    GEOJSON = os.path.join(HERE, 'coordinates.geojson')
 
     with open(OSM, 'r') as f:
         streets = parse_osm(f)

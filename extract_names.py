@@ -287,7 +287,7 @@ def parse_entries(entries):
 if __name__ == '__main__':
     HERE = os.path.dirname(os.path.abspath(__file__))
     PDF = os.path.join(HERE, 'strassennamen.pdf')
-    JSON = os.path.join(HERE, 'streetnames.json')
+    JSON = os.path.join(HERE, 'names.json')
     entries = extract_entries(PDF)
     streets = parse_entries(entries)
 

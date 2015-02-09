@@ -52,8 +52,8 @@ def normalize_name(n):
 
 if __name__ == '__main__':
     HERE = os.path.dirname(os.path.abspath(__file__))
-    NAMES = os.path.join(HERE, 'streetnames.json')
-    COORDINATES = os.path.join(HERE, 'streets.geojson')
+    NAMES = os.path.join(HERE, 'names.json')
+    COORDINATES = os.path.join(HERE, 'coordinates.geojson')
     MERGED = os.path.join(HERE, 'streetnames.geojson')
 
     with codecs.open(COORDINATES, 'r', encoding='utf8') as f:
