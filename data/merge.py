@@ -58,7 +58,7 @@ if __name__ == '__main__':
     HERE = os.path.dirname(os.path.abspath(__file__))
     NAMES = os.path.join(HERE, 'names.json')
     COORDINATES = os.path.join(HERE, 'coordinates.geojson')
-    MERGED = os.path.join(HERE, 'streetnames.geojson')
+    MERGED = os.path.join(HERE, '..', 'web', 'streetnames.geojson')
 
     with codecs.open(COORDINATES, 'r', encoding='utf8') as f:
         coordinates = geojson.load(f)

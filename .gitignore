@@ -1,8 +1,8 @@
 /venv/
-/names.json
-/karlsruhe.osm
-/coordinates.geojson
-/karlsruhe-regbez-latest.osm.pbf*
+/data/names.json
+/data/karlsruhe.osm
+/data/coordinates.geojson
+/data/karlsruhe-regbez-latest.osm.pbf*
 
 *.swp
 *.pyc

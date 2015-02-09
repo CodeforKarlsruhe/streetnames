@@ -29,15 +29,15 @@ For the OSM data conversion you need to have [Osmosis](http://wiki.openstreetmap
 
 First extract the street name information from the PDF:
 
-    $ ./extract_names.py
+    $ data/extract_names.py
 
 Then download the necessary OSM data (about 80M) and extract the coordinates:
 
-    $ ./get_osm_data.sh
-    $ ./extract_coordinates.py
+    $ data/get_osm_data.sh
+    $ data/extract_coordinates.py
 
-Finally, `merge.py` will merge the information from both sources into the file `streetnames.geojson`:
+Finally, merge the information from both sources into the file `web/streetnames.geojson`:
 
-    $ ./merge.py
+    $ data/merge.py
 
-You can now open `index.html` in your browser.
+You can now open `web/index.html` in your browser.
