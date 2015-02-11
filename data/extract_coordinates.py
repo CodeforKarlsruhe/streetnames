@@ -73,6 +73,10 @@ from lxml import etree
 #
 #    Node: Paulckeplatz (1673718306)
 #        highway: place
+#
+# This makes the extraction of place coordinates more involved. Places
+# marked by nodes only are currently not exported, because they end up
+# as very prominent markers on the map (this only affects Paulckeplatz).
 
 
 def check(d, k, v):
@@ -92,17 +96,13 @@ def parse_osm(f):
     relations = {}
     ways = {}
     nodes = {}
-    highway_nodes = {}
     node_refs = []
     tags = {}
     members = []
     for event, element in etree.iterparse(f):
         if element.tag == 'node':
-            coords = (float(element.get('lon')), float(element.get('lat')))
-            if 'name' in tags and check(tags, 'highway', 'place'):
-                tags['coordinates'] = [coords]
-                highway_nodes[tags['name']] = tags
-            nodes[element.get('id')] = coords
+            nodes[element.get('id')] = (float(element.get('lon')),
+                                        float(element.get('lat')))
             tags = {}
         elif element.tag == 'tag':
             tags[element.get('k')] = element.get('v')
@@ -154,7 +154,7 @@ def parse_osm(f):
             if ('highway' in way) or way.get('leisure') in ['park', 'pitch', 'common']:
                 streets[way['name']].append(way)
 
-    return streets, relations, highway_nodes
+    return streets, relations
 
 
 def ways2geometry(ways):
@@ -193,20 +193,13 @@ def relation2geometry(relation):
         raise ValueError('Unknown relation type %r' % relation)
 
 
-def node2geometry(node):
-    """
-    Convert node data into a GeoJSON object.
-    """
-    return geojson.Point(node['coordinates'][0])
-
-
 if __name__ == '__main__':
     HERE = os.path.dirname(os.path.abspath(__file__))
     OSM = os.path.join(HERE, 'karlsruhe.osm')
     GEOJSON = os.path.join(HERE, 'coordinates.geojson')
 
     with open(OSM, 'r') as f:
-        streets, relations, nodes = parse_osm(f)
+        streets, relations = parse_osm(f)
 
     features = []
     for name, ways in streets.iteritems():
@@ -214,9 +207,6 @@ if __name__ == '__main__':
                         id=name))
     for name, props in relations.iteritems():
         features.append(geojson.Feature(geometry=relation2geometry(props),
-                        id=name))
-    for name, props in nodes.iteritems():
-        features.append(geojson.Feature(geometry=node2geometry(props),
                         id=name))
     collection = geojson.FeatureCollection(features)
 
