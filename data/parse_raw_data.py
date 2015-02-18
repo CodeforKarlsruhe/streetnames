@@ -30,19 +30,12 @@ Takes ``raw_data.json`` and outputs data into ``names.json``.
 from __future__ import unicode_literals
 
 import codecs
-import cStringIO
 import json
 import os.path
 import re
 
-from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
-from pdfminer.pdfpage import PDFPage
-from pdfminer.converter import TextConverter
-from pdfminer.layout import LAParams
-
 
 FLAGS = re.UNICODE | re.IGNORECASE
-
 
 
 # Some examples dates from the data
@@ -153,6 +146,51 @@ def parse_entries(streets):
             street['person'] = person
             street['birth'] = birth
             street['death'] = death
+
+
+_GENDER_EXCEPTIONS = {
+    'Blaise': 'm',
+    'Edith': 'f',
+    'Elisabeth': 'f',
+    'Hedwig': 'f',
+    'Henri': 'm',
+    'Rahel': 'f',
+    'Willi': 'm',
+    'Willy': 'm',
+    'Wiltraut': 'f',
+}
+
+
+def guess_gender(name):
+    """
+    Given a person's name guess their gender.
+
+    Returns either ``'m'`` or ``'f'``.
+    """
+    names = name.split()
+    if names[0] == 'Sankt':
+        first_name = names[1]
+    else:
+        first_name = names[0]
+    try:
+        return _GENDER_EXCEPTIONS[first_name]
+    except KeyError:
+        pass
+    if first_name[-1] in 'aeiy':
+        return 'f'
+    return 'm'
+
+
+def guess_genders(streets):
+    """
+    Guess genders of persons.
+    """
+    for street in streets.itervalues():
+        try:
+            street['gender'] = guess_gender(street['person'])
+        except KeyError:
+            # Not a person
+            pass
 
 
 if __name__ == '__main__':
@@ -274,6 +312,9 @@ if __name__ == '__main__':
         'death': 1832,
     })
     streets['Ernststraße']['person'] = 'Ernst I. von Baden-Durlach'
+    streets['Kronprinzenstraße']['person'] = 'Friedrich Wilhelm Victor August Ernst von Preußen'
+
+    guess_genders(streets)
 
     # TODO: The following streets are named after several people. The current
     # data format cannot describe that properly:
