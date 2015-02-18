@@ -1,4 +1,5 @@
 /venv/
+/data/raw_data.json
 /data/names.json
 /data/karlsruhe.osm
 /data/coordinates.geojson

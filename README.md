@@ -29,7 +29,8 @@ For the OSM data conversion you need to have [Osmosis](http://wiki.openstreetmap
 
 First extract the street name information from the PDF:
 
-    $ data/extract_names.py
+    $ data/extract_raw_data.py
+    $ data/parse_raw_data.py
 
 Then download the necessary OSM data (about 80M) and extract the coordinates:
 
