@@ -37,8 +37,10 @@ Then download the necessary OSM data (about 80M) and extract the coordinates:
     $ data/get_osm_data.sh
     $ data/extract_coordinates.py
 
-Finally, merge the information from both sources into the file `web/streetnames.geojson`:
+Finally, merge the information from both sources into the file `web/streetnames.geojson` and create the
+individual datasets:
 
     $ data/merge.py
+    $ data/prepare_datasets.py
 
 You can now open `web/index.html` in your browser.
