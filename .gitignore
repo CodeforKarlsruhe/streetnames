@@ -1,9 +1,10 @@
-/venv/
-/data/raw_data.json
-/data/names.json
-/data/karlsruhe.osm
 /data/coordinates.geojson
+/data/classification.json
+/data/karlsruhe.osm
 /data/karlsruhe-regbez-latest.osm.pbf*
+/data/names.json
+/data/raw_data.json
+/venv/
 
 *.swo
 *.swp
