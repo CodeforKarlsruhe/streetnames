@@ -39,8 +39,7 @@ import geojson
 
 if __name__ == '__main__':
     HERE = os.path.dirname(os.path.abspath(__file__))
-    WEB = os.path.join(HERE, '..', 'web')
-    SOURCE = os.path.join(WEB, 'streetnames.geojson')
+    SOURCE = os.path.join(HERE, 'streetnames.geojson')
 
     with codecs.open(SOURCE, 'r', encoding='utf8') as f:
         data = geojson.load(f)
@@ -49,7 +48,7 @@ if __name__ == '__main__':
         features[feature.id] = feature
 
     def save(data, basename):
-        filename = os.path.join(WEB, basename)
+        filename = os.path.join(HERE, basename)
         with codecs.open(filename, 'w', encoding='utf8') as f:
             geojson.dump(data, f)
 

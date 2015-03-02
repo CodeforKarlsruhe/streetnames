@@ -1,14 +1,15 @@
-Streetnames of Karlsruhe
-========================
+# Streetnames of Karlsruhe
+
 Background information on the street names in [Karlsruhe](https://en.wikipedia.org/wiki/Karlsruhe).
 
 Inspired by [UlmApi](http://www.ulmapi.de)'s [Streetdudes](http://www.ulmapi.de/streetdudes/) project.
 
 
-Developers
-----------
-The data extraction is done in Python. After cloning the repository, create a virtual environment
-and activate it:
+## Developers
+
+### Data Extraction
+The data extraction is done in Python, all relevant files are in the `master` branch. After cloning
+the repository, create a virtual environment and activate it:
 
     $ virtualenv venv
     $ source venv/bin/activate
@@ -29,18 +30,21 @@ For the OSM data conversion you need to have [Osmosis](http://wiki.openstreetmap
 
 First extract the street name information from the PDF:
 
-    $ data/extract_raw_data.py
-    $ data/parse_raw_data.py
+    $ ./extract_raw_data.py
+    $ ./parse_raw_data.py
 
 Then download the necessary OSM data (about 80M) and extract the coordinates:
 
-    $ data/get_osm_data.sh
-    $ data/extract_coordinates.py
+    $ ./get_osm_data.sh
+    $ ./extract_coordinates.py
 
-Finally, merge the information from both sources into the file `web/streetnames.geojson` and create the
+Finally, merge the information from both sources into the file `streetnames.geojson` and create the
 individual datasets:
 
-    $ data/merge.py
-    $ data/prepare_datasets.py
+    $ ./merge.py
+    $ ./prepare_datasets.py
 
-You can now open `web/index.html` in your browser.
+
+### Visualization
+
+The visualization code is in the `gh-pages` branch.
